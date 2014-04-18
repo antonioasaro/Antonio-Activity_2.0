@@ -60,7 +60,9 @@ char *itoa(int i)
 #ifdef ACTIVITY
 void handle_accel_data(AccelData *accel_data, uint32_t num_samples) {
 static int prev_x = 0, prev_y = 0, prev_z = 0;
-static char xyz_text[64] = "";
+static char accel_text[32] = "";
+static char total_text[32] = "";
+static char sec_text[32] = "";
 static int total = 0;
 static int sec = 0;
 int next_x, next_y, next_z;
@@ -85,8 +87,8 @@ int delta;
   }
 
   APP_LOG(APP_LOG_LEVEL_WARNING, "hi antonio - sec: %d --> total: %d, delta: %d, dx: %d, dy: %d, dz: %d", sec, total, delta, delta_x, delta_y, delta_z);
-  strcpy(xyz_text, itoa(total)); 
-  if (sec == 59) text_layer_set_text(layer_word_text, xyz_text);
+  strcpy(sec_text, itoa(sec)); strcpy(total_text, itoa(total)); strcpy(accel_text, sec_text); strcat(accel_text, ", "); strcat(accel_text, total_text);
+  text_layer_set_text(layer_word_text, accel_text);
 }
 #endif
 	
@@ -351,7 +353,7 @@ void handle_init(void) {
     text_layer_set_font(layer_date_text, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_CONDENSED_22)));
 
     text_layer_set_background_color(layer_time_text, GColorClear);
-    text_layer_set_font(layer_time_text, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_BOLD_SUBSET_40)));
+    text_layer_set_font(layer_time_text, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_BOLD_SUBSET_44)));
 
     text_layer_set_background_color(layer_batt_text, GColorClear);
     text_layer_set_font(layer_batt_text, fonts_get_system_font(FONT_KEY_FONT_FALLBACK));
