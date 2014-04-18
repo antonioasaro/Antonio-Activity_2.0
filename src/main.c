@@ -57,6 +57,12 @@ char *itoa(int i)
 #endif
 
 	
+#ifdef ACTIVITY
+void handle_accel_data(AccelData *data, uint32_t num_samples) {
+	APP_LOG(APP_LOG_LEVEL_INFO , "hi there");
+}
+#endif
+	
 void handle_battery(BatteryChargeState charge_state) {
     static char battery_text[] = "100 ";
 
@@ -273,8 +279,8 @@ void handle_init(void) {
     window_stack_push(window, true /* Animated */);
 
     // resources
-    img_bt_connect     = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_CONNECT);
-    img_bt_disconnect  = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_DISCONNECT);
+    img_bt_connect     = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_LOW);
+    img_bt_disconnect  = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_LOW);
     img_battery_full   = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_FULL);
     img_battery_half   = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_HALF);
     img_battery_low    = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_LOW);
@@ -347,6 +353,11 @@ void handle_init(void) {
 
     // style
     set_style();
+	
+#ifdef ACTIVITY
+	accel_data_service_subscribe(10, &handle_accel_data);
+	accel_service_set_sampling_rate(ACCEL_SAMPLING_10HZ);
+#endif
 
     // handlers
     battery_state_service_subscribe(&handle_battery);
