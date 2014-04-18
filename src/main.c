@@ -61,6 +61,7 @@ char *itoa(int i)
 void handle_accel_data(AccelData *accel_data, uint32_t num_samples) {
 uint32_t i;
 int Xm, Ym, Zm;
+static char xyz_text[64] = "";
 	
   for (i=0,Xm=Ym=Zm=0;i<num_samples;i++){
 	Xm=Xm+abs(accel_data[i].x);
@@ -68,8 +69,9 @@ int Xm, Ym, Zm;
 	Zm=Zm+abs(accel_data[i].z);
   }
   APP_LOG(APP_LOG_LEVEL_WARNING, "hi antonio - Xm: %d, Ym: %d, Zm: %d", Xm, Ym, Zm);
-  text_layer_set_text(layer_word_text, "activity graph");
-
+  strcpy(xyz_text, "XY: "); strcat(xyz_text, itoa(Xm)); 
+  strcat(xyz_text, ",   "); strcat(xyz_text, itoa(Ym));
+  text_layer_set_text(layer_word_text, xyz_text);
 }
 #endif
 	
