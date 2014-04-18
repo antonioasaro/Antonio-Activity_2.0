@@ -85,7 +85,7 @@ int delta;
   }
 
   APP_LOG(APP_LOG_LEVEL_WARNING, "hi antonio - sec: %d --> total: %d, delta: %d, dx: %d, dy: %d, dz: %d", sec, total, delta, delta_x, delta_y, delta_z);
-  strcpy(xyz_text, "Total: "); strcat(xyz_text, itoa(total)); 
+  strcpy(xyz_text, itoa(total)); 
   if (sec == 59) text_layer_set_text(layer_word_text, xyz_text);
 }
 #endif
