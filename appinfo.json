@@ -1,0 +1,65 @@
+{
+    "versionLabel": "1.0",
+    "uuid": "b95eda21-5326-4fb0-ba9f-d2b1d259f6aa",
+    "appKeys": {},
+    "longName": "Hangout",
+    "versionCode": 1,
+    "capabilities": [
+        ""
+    ],
+    "shortName": "Hangout",
+    "companyName": "-",
+    "watchapp": {
+        "watchface": true
+    },
+    "resources": {
+        "media": [
+            {
+                "type": "png",
+                "name": "IMAGE_MENU_ICON",
+                "file": "images/menu_icon.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_DISCONNECT",
+                "file": "images/disconnect.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_CONNECT",
+                "file": "images/bluetooth.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_BATTERY_FULL",
+                "file": "images/battery.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_BATTERY_HALF",
+                "file": "images/battery-half.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_BATTERY_LOW",
+                "file": "images/battery-low.png"
+            },
+            {
+                "type": "png",
+                "name": "IMAGE_BATTERY_CHARGE",
+                "file": "images/battery-charge.png"
+            },
+            {
+                "type": "font",
+                "name": "FONT_ROBOTO_CONDENSED_22",
+                "file": "fonts/Roboto-Condensed.ttf"
+            },
+            {
+                "characterRegex": "[:0-9]",
+                "type": "font",
+                "name": "FONT_ROBOTO_BOLD_SUBSET_48",
+                "file": "fonts/Roboto-Bold.ttf"
+            }
+        ]
+    }
+}
