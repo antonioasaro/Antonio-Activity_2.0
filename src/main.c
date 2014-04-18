@@ -59,18 +59,27 @@ char *itoa(int i)
 	
 #ifdef ACTIVITY
 void handle_accel_data(AccelData *accel_data, uint32_t num_samples) {
-uint32_t i;
-int Xm, Ym, Zm;
+static int prev_x = 0, prev_y = 0, prev_z = 0;
 static char xyz_text[64] = "";
+int next_x, next_y, next_z;
+int delta_x, delta_y, delta_z;
+int total;	
 	
-  for (i=0,Xm=Ym=Zm=0;i<num_samples;i++){
-	Xm=Xm+abs(accel_data[i].x);
-	Ym=Ym+abs(accel_data[i].y);
-	Zm=Zm+abs(accel_data[i].z);
+  next_x = next_y = next_z = 0;
+  for (uint32_t i=0;i<num_samples;i++){
+	next_x = next_x + accel_data[i].x;
+	next_y = next_y + accel_data[i].y;
+	next_z = next_z + accel_data[i].z;
   }
-  APP_LOG(APP_LOG_LEVEL_WARNING, "hi antonio - Xm: %d, Ym: %d, Zm: %d", Xm, Ym, Zm);
-  strcpy(xyz_text, "XY: "); strcat(xyz_text, itoa(Xm)); 
-  strcat(xyz_text, ",   "); strcat(xyz_text, itoa(Ym));
+  delta_x = abs(next_x - prev_x)/QUANTIZATION; prev_x = next_x;	
+  delta_y = abs(next_y - prev_y)/QUANTIZATION; prev_y = next_y;	
+  delta_z = abs(next_z - prev_z)/QUANTIZATION; prev_z = next_z;	
+  total = delta_x + delta_y + delta_y;
+
+  APP_LOG(APP_LOG_LEVEL_WARNING, "hi antonio - total: %d, dx: %d, dy: %d, dz: %d", total, delta_x, delta_y, delta_z);
+  strcpy(xyz_text, ""); strcat(xyz_text, itoa(delta_x)); 
+  strcat(xyz_text, ",   "); strcat(xyz_text, itoa(delta_y));
+  strcat(xyz_text, ",   "); strcat(xyz_text, itoa(delta_z));
   text_layer_set_text(layer_word_text, xyz_text);
 }
 #endif
