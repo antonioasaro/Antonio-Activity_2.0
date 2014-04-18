@@ -68,6 +68,8 @@ int Xm, Ym, Zm;
 	Zm=Zm+abs(accel_data[i].z);
   }
   APP_LOG(APP_LOG_LEVEL_WARNING, "hi antonio - Xm: %d, Ym: %d, Zm: %d", Xm, Ym, Zm);
+  text_layer_set_text(layer_word_text, "activity graph");
+
 }
 #endif
 	
@@ -177,6 +179,7 @@ void update_time(struct tm *tick_time) {
 
     text_layer_set_text(layer_time_text, time_text);
 	
+#ifndef ACTIVITY
 #ifdef HANGOUT
     static int word_idx;
 	static int word_len;
@@ -228,7 +231,7 @@ void update_time(struct tm *tick_time) {
 	text_layer_set_text(layer_word_text, owrd_text);
 //    text_layer_set_text(layer_ulne_text, ulne_text);
 #endif
-	
+#endif
 }
 
 void set_style(void) {
@@ -287,8 +290,8 @@ void handle_init(void) {
     window_stack_push(window, true /* Animated */);
 
     // resources
-    img_bt_connect     = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_LOW);
-    img_bt_disconnect  = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_LOW);
+    img_bt_connect     = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_CONNECT);
+    img_bt_disconnect  = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_DISCONNECT);
     img_battery_full   = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_FULL);
     img_battery_half   = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_HALF);
     img_battery_low    = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY_LOW);
@@ -331,7 +334,7 @@ void handle_init(void) {
     text_layer_set_font(layer_date_text, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_CONDENSED_22)));
 
     text_layer_set_background_color(layer_time_text, GColorClear);
-    text_layer_set_font(layer_time_text, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_BOLD_SUBSET_48)));
+    text_layer_set_font(layer_time_text, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_BOLD_SUBSET_40)));
 
     text_layer_set_background_color(layer_batt_text, GColorClear);
     text_layer_set_font(layer_batt_text, fonts_get_system_font(FONT_KEY_FONT_FALLBACK));

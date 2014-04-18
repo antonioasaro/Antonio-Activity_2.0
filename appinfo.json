@@ -15,9 +15,29 @@
     "resources": {
         "media": [
             {
+                "file": "images/phone-lost.png",
+                "name": "IMAGE_PHONE_LOST",
+                "type": "png"
+            },
+            {
+                "file": "images/phone.png",
+                "name": "IMAGE_PHONE",
+                "type": "png"
+            },
+            {
+                "file": "images/disconnect.png",
+                "name": "IMAGE_DISCONNECT",
+                "type": "png"
+            },
+            {
+                "file": "images/bluetooth.png",
+                "name": "IMAGE_CONNECT",
+                "type": "png"
+            },
+            {
                 "characterRegex": "[:0-9]",
                 "file": "fonts/Roboto-Bold.ttf",
-                "name": "FONT_ROBOTO_BOLD_SUBSET_48",
+                "name": "FONT_ROBOTO_BOLD_SUBSET_40",
                 "type": "font"
             },
             {
