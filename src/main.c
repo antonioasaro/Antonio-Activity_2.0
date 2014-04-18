@@ -58,8 +58,16 @@ char *itoa(int i)
 
 	
 #ifdef ACTIVITY
-void handle_accel_data(AccelData *data, uint32_t num_samples) {
-	APP_LOG(APP_LOG_LEVEL_INFO , "hi there");
+void handle_accel_data(AccelData *accel_data, uint32_t num_samples) {
+uint32_t i;
+int Xm, Ym, Zm;
+	
+  for (i=0,Xm=Ym=Zm=0;i<num_samples;i++){
+	Xm=Xm+abs(accel_data[i].x);
+	Ym=Ym+abs(accel_data[i].y);
+	Zm=Zm+abs(accel_data[i].z);
+  }
+  APP_LOG(APP_LOG_LEVEL_WARNING, "hi antonio - Xm: %d, Ym: %d, Zm: %d", Xm, Ym, Zm);
 }
 #endif
 	
