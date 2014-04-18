@@ -13,6 +13,9 @@ TextLayer *layer_time_text;
 TextLayer *layer_word_text;
 TextLayer *layer_ulne_text;
 #endif
+#ifdef ACTIVITY
+Layer *layer_graph;
+#endif
 Layer *layer_line;
 
 BitmapLayer *layer_batt_img;
@@ -58,6 +61,19 @@ char *itoa(int i)
 
 	
 #ifdef ACTIVITY
+void handle_graph_update(Layer *layer, GContext *ctx) {
+  APP_LOG(APP_LOG_LEVEL_WARNING, "draw a line");
+  GRect bounds = layer_get_bounds(layer);
+  graphics_context_set_fill_color(ctx, GColorWhite);
+  graphics_fill_rect(ctx, bounds, 0, GCornerNone);
+
+  /*
+  GPoint p0 = GPoint(0, 0);
+  GPoint p1 = GPoint(40,60);
+  graphics_draw_line(ctx, p0, p1); 
+  */
+}
+
 void handle_accel_data(AccelData *accel_data, uint32_t num_samples) {
 static int prev_x = 0, prev_y = 0, prev_z = 0;
 static char accel_text[32] = "";
@@ -86,9 +102,9 @@ int delta;
 	  sec++; total = total + delta; 
   }
 
-  APP_LOG(APP_LOG_LEVEL_WARNING, "hi antonio - sec: %d --> total: %d, delta: %d, dx: %d, dy: %d, dz: %d", sec, total, delta, delta_x, delta_y, delta_z);
-  strcpy(sec_text, itoa(sec)); strcpy(total_text, itoa(total)); strcpy(accel_text, sec_text); strcat(accel_text, ", "); strcat(accel_text, total_text);
-  text_layer_set_text(layer_word_text, accel_text);
+  APP_LOG(APP_LOG_LEVEL_WARNING, "hi antonio. sec: %d --> total: %d, delta: %d, dx: %d, dy: %d, dz: %d", sec, total, delta, delta_x, delta_y, delta_z);
+////  strcpy(sec_text, itoa(sec)); strcpy(total_text, itoa(total)); strcpy(accel_text, sec_text); strcat(accel_text, ", "); strcat(accel_text, total_text);
+////  text_layer_set_text(layer_word_text, accel_text);
 }
 #endif
 	
@@ -387,6 +403,10 @@ void handle_init(void) {
 #ifdef ACTIVITY
 	accel_data_service_subscribe(10, &handle_accel_data);
 	accel_service_set_sampling_rate(ACCEL_SAMPLING_10HZ);
+
+	layer_graph = layer_create(GRect(00, 120, 140, 160));
+    layer_add_child(window_layer, layer_graph);
+	layer_set_update_proc(layer_graph, &handle_graph_update);
 #endif
 
     // handlers
