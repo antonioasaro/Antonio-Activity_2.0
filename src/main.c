@@ -33,7 +33,7 @@ int cur_day = -1;
 bool new_word = true;
 #endif
 #ifdef ACTIVITY
-int totals[140] = { 0 };
+int totals[140/2] = { 0 };
 #endif
 	
 	
@@ -67,20 +67,19 @@ char *itoa(int i)
 int min(int a, int b) { if (a<b) return(a); else return(b); }
 int calc_height(int total){
 int i, j, h = 0;
-  for (i=0, j=1; i<=16; i=i+1) {
+  for (i=0, j=1; i<=32; i=i+1) {
 	  if (total <= j) { h = i; break; }
     j = j * 2;
   }
-  return(min(h, 32));
+  return(min(2*h, 40));
 }
 void handle_graph_update(Layer *layer, GContext *ctx) {
-  GRect bounds = layer_get_bounds(layer);
-  graphics_context_set_fill_color(ctx, GColorBlack);
-  graphics_fill_rect(ctx, bounds, 0, GCornerNone);
+  graphics_context_set_fill_color(ctx, GColorWhite);
+  graphics_fill_rect(ctx, layer_get_bounds(layer), 0, GCornerNone);
 
   int y;
   GPoint p0, p1;
-  graphics_context_set_fill_color(ctx, GColorWhite);
+  graphics_context_set_fill_color(ctx, GColorBlack);
   for (int x=0; x<140/2;x++) {
 	y = calc_height(totals[x]); 
     if (x < 8) APP_LOG(APP_LOG_LEVEL_INFO, "UPDATE_GRAPH: %d - (%d, %d)", totals[x], x, y);
@@ -118,9 +117,13 @@ int delta;
 	  tick++; total = total + delta; 
   }
   if ((tick % 60) == 0) {
-    totals[x_axis] = total;
-////	APP_LOG(APP_LOG_LEVEL_INFO, "TOTAL: %d, %d", x_axis, totals[x_axis]);
-    if (x_axis < 140) x_axis++; else x_axis = 0;
+	if (x_axis < 140/2-1) {
+      totals[x_axis] = total;
+	  x_axis++; 
+	} else {
+	  for (int i=0; i<140/2; i++) { totals[i] = totals[i+1]; }
+      totals[x_axis] = total;
+	}
   }
 }
 #endif
@@ -417,6 +420,14 @@ void handle_init(void) {
     // style
     set_style();
 	
+    // handlers
+    battery_state_service_subscribe(&handle_battery);
+    bluetooth_connection_service_subscribe(&handle_bluetooth);
+    app_focus_service_subscribe(&handle_appfocus);
+    tick_timer_service_subscribe(MINUTE_UNIT, handle_minute_tick);
+    accel_tap_service_subscribe(handle_tap);
+    app_timer_register(2000, handle_tap_timeout, NULL);
+
 #ifdef ACTIVITY
 	accel_data_service_subscribe(10, &handle_accel_data);
 	accel_service_set_sampling_rate(ACCEL_SAMPLING_10HZ);
@@ -426,15 +437,7 @@ void handle_init(void) {
 	layer_set_update_proc(layer_graph, &handle_graph_update);
 #endif
 
-    // handlers
-    battery_state_service_subscribe(&handle_battery);
-    bluetooth_connection_service_subscribe(&handle_bluetooth);
-    app_focus_service_subscribe(&handle_appfocus);
-    tick_timer_service_subscribe(MINUTE_UNIT, handle_minute_tick);
-    accel_tap_service_subscribe(handle_tap);
-    app_timer_register(2000, handle_tap_timeout, NULL);
-
-    // draw first frame
+	// draw first frame
     force_update();
 }
 
