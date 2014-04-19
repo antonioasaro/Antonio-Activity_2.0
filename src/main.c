@@ -90,9 +90,6 @@ void handle_graph_update(Layer *layer, GContext *ctx) {
 
 void handle_accel_data(AccelData *accel_data, uint32_t num_samples) {
 static int prev_x = 0, prev_y = 0, prev_z = 0;
-static char accel_text[32] = "";
-static char total_text[32] = "";
-static char sec_text[32] = "";
 static int tick = 0;
 static int x_axis = 0;
 static int total = 0;
@@ -121,7 +118,7 @@ int delta;
       totals[x_axis] = total;
 	  x_axis++; 
 	} else {
-	  for (int i=0; i<140/2; i++) { totals[i] = totals[i+1]; }
+	  for (int i=0; i<140/2-1; i++) { totals[i] = totals[i+1]; }
       totals[x_axis] = total;
 	}
   }
@@ -131,6 +128,7 @@ int delta;
 void handle_battery(BatteryChargeState charge_state) {
     static char battery_text[] = "100 ";
 
+	APP_LOG(APP_LOG_LEVEL_INFO, "HANDLE BATTERY");
     if (charge_state.is_charging) {
         bitmap_layer_set_bitmap(layer_batt_img, img_battery_charge);
 
@@ -310,6 +308,7 @@ void set_style(void) {
 }
 
 void force_update(void) {
+	APP_LOG(APP_LOG_LEVEL_INFO, "FORCE UPDATE");
     handle_battery(battery_state_service_peek());
     handle_bluetooth(bluetooth_connection_service_peek());
     time_t now = time(NULL);
@@ -381,6 +380,10 @@ void handle_init(void) {
 //    text_layer_set_font(layer_ulne_text, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_CONDENSED_22)));
 //    text_layer_set_text_alignment(layer_ulne_text, GTextAlignmentCenter);
 #endif
+#ifdef ACTIVITY
+	layer_graph = layer_create(GRect(0, 128, 140, 160));
+#endif
+
 	
     text_layer_set_background_color(layer_wday_text, GColorClear);
     text_layer_set_font(layer_wday_text, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_CONDENSED_22)));
@@ -416,6 +419,10 @@ void handle_init(void) {
 //    layer_add_child(window_layer, text_layer_get_layer(layer_ulne_text));
 	srand(time(NULL));
 #endif
+#ifdef ACTIVITY
+    layer_add_child(window_layer, layer_graph);
+	layer_set_update_proc(layer_graph, &handle_graph_update);
+#endif
 
     // style
     set_style();
@@ -428,17 +435,14 @@ void handle_init(void) {
     accel_tap_service_subscribe(handle_tap);
     app_timer_register(2000, handle_tap_timeout, NULL);
 
+	// draw first frame
+    force_update();
+
 #ifdef ACTIVITY
 	accel_data_service_subscribe(10, &handle_accel_data);
 	accel_service_set_sampling_rate(ACCEL_SAMPLING_10HZ);
-
-	layer_graph = layer_create(GRect(0, 128, 140, 160));
-    layer_add_child(window_layer, layer_graph);
-	layer_set_update_proc(layer_graph, &handle_graph_update);
 #endif
 
-	// draw first frame
-    force_update();
 }
 
 
