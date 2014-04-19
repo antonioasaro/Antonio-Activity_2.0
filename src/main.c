@@ -65,19 +65,27 @@ char *itoa(int i)
 	
 #ifdef ACTIVITY
 int min(int a, int b) { if (a<b) return(a); else return(b); }
+int calc_height(int total){
+int i, j, h = 0;
+  for (i=0, j=1; i<=16; i=i+1) {
+	if (total <= j) h = i;
+	j = j * 2;
+  }
+  return(min(h, 32));
+}
 void handle_graph_update(Layer *layer, GContext *ctx) {
 	
-  APP_LOG(APP_LOG_LEVEL_WARNING, "DRAW LINE");
   GRect bounds = layer_get_bounds(layer);
   graphics_context_set_fill_color(ctx, GColorWhite);
   graphics_fill_rect(ctx, bounds, 0, GCornerNone);
 
+  int y;
   GPoint p0, p1;
   graphics_context_set_fill_color(ctx, GColorBlack);
   for (int x=0; x<140;x++) {
-    p0 = GPoint(x, 0);
-	p1 = GPoint(x, x/4);
+	y = calc_height(totals[x]); p0 = GPoint(x, 0); p1 = GPoint(x, y);
     graphics_draw_line(ctx, p0, p1); 
+    if (x < 16) APP_LOG(APP_LOG_LEVEL_INFO, "UPDATE_GRAPH: (%d, %d) - (%d, %d)", x, 0, x, y);
   }
 } 
 
@@ -87,6 +95,7 @@ static char accel_text[32] = "";
 static char total_text[32] = "";
 static char sec_text[32] = "";
 static int tick = 0;
+static int x_axis = 0;
 static int total = 0;
 int next_x, next_y, next_z;
 int delta_x, delta_y, delta_z;
@@ -108,10 +117,11 @@ int delta;
   } else { 
 	  tick++; total = total + delta; 
   }
-
-////  if ((sec % 60) == 0) APP_LOG(APP_LOG_LEVEL_WARNING, "hi antonio. sec: %d --> total: %d, delta: %d, dx: %d, dy: %d, dz: %d", sec, total, delta, delta_x, delta_y, delta_z);
-////  strcpy(sec_text, itoa(sec)); strcpy(total_text, itoa(total)); strcpy(accel_text, sec_text); strcat(accel_text, ", "); strcat(accel_text, total_text);
-////  text_layer_set_text(layer_word_text, accel_text);
+  if ((tick % 60) == 0) {
+    totals[x_axis] = total;
+////	APP_LOG(APP_LOG_LEVEL_INFO, "TOTAL: %d, %d", x_axis, totals[x_axis]);
+    if (x_axis < 140) x_axis++; else x_axis = 0;
+  }
 }
 #endif
 	
