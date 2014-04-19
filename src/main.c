@@ -183,7 +183,7 @@ void update_time(struct tm *tick_time) {
     static char wdat_text[] = "00";
     static char wday_text[] = "Xxx";
     static char mnth_text[] = "Xxx";
-    static char date_text[] = "Xxx Xxx 00 ";
+    static char date_text[] = "Xxx Xxx 00  ";
 #else
     static char date_text[] = "Xxxxxxxxx 00";
     static char wday_text[] = "Xxxxxxxxx";
@@ -203,7 +203,7 @@ void update_time(struct tm *tick_time) {
         strftime(mnth_text, sizeof(mnth_text), "%B", tick_time);
 		strcpy(date_text, wday_text); strcat(date_text, "  ");
 		strcat(date_text, mnth_text); strcat(date_text, " ");
-		strcat(date_text, wdat_text); date_text[11] = '\0';
+		strcat(date_text, wdat_text);
 #else
         strftime(date_text, sizeof(date_text), "%B %e", tick_time);
 #endif
