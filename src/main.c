@@ -32,6 +32,9 @@ int cur_day = -1;
 #ifdef HANGOUT
 bool new_word = true;
 #endif
+#ifdef ACTIVITY
+int totals[140] = { 0 };
+#endif
 	
 	
 #ifdef HANGOUT
@@ -61,26 +64,30 @@ char *itoa(int i)
 
 	
 #ifdef ACTIVITY
+int min(int a, int b) { if (a<b) return(a); else return(b); }
 void handle_graph_update(Layer *layer, GContext *ctx) {
-  APP_LOG(APP_LOG_LEVEL_WARNING, "draw a line");
+	
+  APP_LOG(APP_LOG_LEVEL_WARNING, "DRAW LINE");
   GRect bounds = layer_get_bounds(layer);
   graphics_context_set_fill_color(ctx, GColorWhite);
   graphics_fill_rect(ctx, bounds, 0, GCornerNone);
 
-  /*
-  GPoint p0 = GPoint(0, 0);
-  GPoint p1 = GPoint(40,60);
-  graphics_draw_line(ctx, p0, p1); 
-  */
-}
+  GPoint p0, p1;
+  graphics_context_set_fill_color(ctx, GColorBlack);
+  for (int x=0; x<140;x++) {
+    p0 = GPoint(x, 0);
+	p1 = GPoint(x, x/4);
+    graphics_draw_line(ctx, p0, p1); 
+  }
+} 
 
 void handle_accel_data(AccelData *accel_data, uint32_t num_samples) {
 static int prev_x = 0, prev_y = 0, prev_z = 0;
 static char accel_text[32] = "";
 static char total_text[32] = "";
 static char sec_text[32] = "";
+static int tick = 0;
 static int total = 0;
-static int sec = 0;
 int next_x, next_y, next_z;
 int delta_x, delta_y, delta_z;
 int delta;	
@@ -96,13 +103,13 @@ int delta;
   delta_z = abs(next_z - prev_z)/QUANTIZATION; prev_z = next_z;	
   delta   = delta_x + delta_y + delta_z;
 
-  if ((sec % 60) == 0) { 
-	  sec = 1; total = delta; 
+  if ((tick % 60) == 0) { 
+	  tick = 1; total = delta; 
   } else { 
-	  sec++; total = total + delta; 
+	  tick++; total = total + delta; 
   }
 
-  APP_LOG(APP_LOG_LEVEL_WARNING, "hi antonio. sec: %d --> total: %d, delta: %d, dx: %d, dy: %d, dz: %d", sec, total, delta, delta_x, delta_y, delta_z);
+////  if ((sec % 60) == 0) APP_LOG(APP_LOG_LEVEL_WARNING, "hi antonio. sec: %d --> total: %d, delta: %d, dx: %d, dy: %d, dz: %d", sec, total, delta, delta_x, delta_y, delta_z);
 ////  strcpy(sec_text, itoa(sec)); strcpy(total_text, itoa(total)); strcpy(accel_text, sec_text); strcat(accel_text, ", "); strcat(accel_text, total_text);
 ////  text_layer_set_text(layer_word_text, accel_text);
 }
@@ -264,7 +271,7 @@ void update_time(struct tm *tick_time) {
 	}
 	
 	text_layer_set_text(layer_word_text, owrd_text);
-//    text_layer_set_text(layer_ulne_text, ulne_text);
+    text_layer_set_text(layer_ulne_text, ulne_text);
 #endif
 #endif
 }
@@ -404,7 +411,7 @@ void handle_init(void) {
 	accel_data_service_subscribe(10, &handle_accel_data);
 	accel_service_set_sampling_rate(ACCEL_SAMPLING_10HZ);
 
-	layer_graph = layer_create(GRect(00, 120, 140, 160));
+	layer_graph = layer_create(GRect(0, 128, 140, 160));
     layer_add_child(window_layer, layer_graph);
 	layer_set_update_proc(layer_graph, &handle_graph_update);
 #endif
