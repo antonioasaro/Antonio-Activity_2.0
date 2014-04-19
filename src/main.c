@@ -68,24 +68,24 @@ int min(int a, int b) { if (a<b) return(a); else return(b); }
 int calc_height(int total){
 int i, j, h = 0;
   for (i=0, j=1; i<=16; i=i+1) {
-	if (total <= j) h = i;
-	j = j * 2;
+	  if (total <= j) { h = i; break; }
+    j = j * 2;
   }
   return(min(h, 32));
 }
 void handle_graph_update(Layer *layer, GContext *ctx) {
-	
   GRect bounds = layer_get_bounds(layer);
-  graphics_context_set_fill_color(ctx, GColorWhite);
+  graphics_context_set_fill_color(ctx, GColorBlack);
   graphics_fill_rect(ctx, bounds, 0, GCornerNone);
 
   int y;
   GPoint p0, p1;
-  graphics_context_set_fill_color(ctx, GColorBlack);
-  for (int x=0; x<140;x++) {
-	y = calc_height(totals[x]); p0 = GPoint(x, 0); p1 = GPoint(x, y);
-    graphics_draw_line(ctx, p0, p1); 
-    if (x < 16) APP_LOG(APP_LOG_LEVEL_INFO, "UPDATE_GRAPH: (%d, %d) - (%d, %d)", x, 0, x, y);
+  graphics_context_set_fill_color(ctx, GColorWhite);
+  for (int x=0; x<140/2;x++) {
+	y = calc_height(totals[x]); 
+    if (x < 8) APP_LOG(APP_LOG_LEVEL_INFO, "UPDATE_GRAPH: %d - (%d, %d)", totals[x], x, y);
+	p0 = GPoint(2*x+0, 40); p1 = GPoint(2*x+0, 40 - y); graphics_draw_line(ctx, p0, p1); 
+	p0 = GPoint(2*x+1, 40); p1 = GPoint(2*x+1, 40 - y); graphics_draw_line(ctx, p0, p1); 
   }
 } 
 
@@ -281,7 +281,7 @@ void update_time(struct tm *tick_time) {
 	}
 	
 	text_layer_set_text(layer_word_text, owrd_text);
-    text_layer_set_text(layer_ulne_text, ulne_text);
+//    text_layer_set_text(layer_ulne_text, ulne_text);
 #endif
 #endif
 }
