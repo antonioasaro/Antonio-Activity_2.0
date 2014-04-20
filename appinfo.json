@@ -1,76 +1,76 @@
 {
-    "versionCode": 1,
     "versionLabel": "1.1",
+    "uuid": "b95eda21-5326-4fb0-ba9f-d2b1d259f6ab",
     "appKeys": {},
+    "longName": "Activity",
+    "versionCode": 1,
+    "shortName": "Activity",
+    "companyName": "-",
     "capabilities": [
         ""
     ],
-    "uuid": "b95eda21-5326-4fb0-ba9f-d2b1d259f6ab",
+    "watchapp": {
+        "watchface": true
+    },
     "resources": {
         "media": [
             {
-                "name": "IMAGE_PHONE_LOST",
                 "type": "png",
+                "name": "IMAGE_PHONE_LOST",
                 "file": "images/phone-lost.png"
             },
             {
-                "name": "IMAGE_PHONE",
                 "type": "png",
+                "name": "IMAGE_PHONE",
                 "file": "images/phone.png"
             },
             {
-                "name": "IMAGE_DISCONNECT",
                 "type": "png",
+                "name": "IMAGE_DISCONNECT",
                 "file": "images/disconnect.png"
             },
             {
-                "name": "IMAGE_CONNECT",
                 "type": "png",
+                "name": "IMAGE_CONNECT",
                 "file": "images/bluetooth.png"
             },
             {
-                "name": "FONT_ROBOTO_BOLD_SUBSET_44",
+                "characterRegex": "[:0-9]",
                 "type": "font",
-                "file": "fonts/Roboto-Bold.ttf",
-                "characterRegex": "[:0-9]"
+                "name": "FONT_ROBOTO_BOLD_SUBSET_44",
+                "file": "fonts/Roboto-Bold.ttf"
             },
             {
-                "name": "FONT_ROBOTO_CONDENSED_22",
                 "type": "font",
+                "name": "FONT_ROBOTO_CONDENSED_22",
                 "file": "fonts/Roboto-Condensed.ttf"
             },
             {
-                "name": "IMAGE_BATTERY_CHARGE",
                 "type": "png",
+                "name": "IMAGE_BATTERY_CHARGE",
                 "file": "images/battery-charge.png"
             },
             {
-                "name": "IMAGE_BATTERY_LOW",
                 "type": "png",
+                "name": "IMAGE_BATTERY_LOW",
                 "file": "images/battery-low.png"
             },
             {
-                "name": "IMAGE_BATTERY_HALF",
                 "type": "png",
+                "name": "IMAGE_BATTERY_HALF",
                 "file": "images/battery-half.png"
             },
             {
-                "name": "IMAGE_BATTERY_FULL",
                 "type": "png",
+                "name": "IMAGE_BATTERY_FULL",
                 "file": "images/battery.png"
             },
             {
                 "menuIcon": true,
-                "name": "IMAGE_MENU_ICON",
                 "type": "png",
+                "name": "IMAGE_MENU_ICON",
                 "file": "images/menu_icon.png"
             }
         ]
-    },
-    "longName": "Activity",
-    "watchapp": {
-        "watchface": true
-    },
-    "companyName": "-",
-    "shortName": "Activity"
+    }
 }

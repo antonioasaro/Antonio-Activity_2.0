@@ -81,6 +81,10 @@ void handle_graph_update(Layer *layer, GContext *ctx) {
   GPoint p0, p1;
   graphics_context_set_fill_color(ctx, GColorBlack);
   for (int x=0; x<140/2;x++) {
+    if ((x % 10) == 0) {
+	  p0 = GPoint(2*x+0, 0); p1 = GPoint(2*x+0, 6); graphics_draw_line(ctx, p0, p1); 
+	}
+
 	y = calc_height(totals[x]); 
     if (x < 8) APP_LOG(APP_LOG_LEVEL_INFO, "UPDATE_GRAPH: %d - (%d, %d)", totals[x], x, y);
 	p0 = GPoint(2*x+0, 40); p1 = GPoint(2*x+0, 40 - y); graphics_draw_line(ctx, p0, p1); 
@@ -91,7 +95,7 @@ void handle_graph_update(Layer *layer, GContext *ctx) {
 void handle_accel_data(AccelData *accel_data, uint32_t num_samples) {
 static int prev_x = 0, prev_y = 0, prev_z = 0;
 static int tick = 0;
-static int x_axis = 0;
+static int x_axis = 140/2-1;
 static int total = 0;
 int next_x, next_y, next_z;
 int delta_x, delta_y, delta_z;
@@ -109,9 +113,9 @@ int delta;
   delta   = delta_x + delta_y + delta_z;
 
   if ((tick % 60) == 0) { 
-	  tick = 1; total = delta; 
+	  total = delta; tick = 1;
   } else { 
-	  tick++; total = total + delta; 
+	  total = total + delta; tick++;
   }
   if ((tick % 60) == 0) {
 	if (x_axis < 140/2-1) {
