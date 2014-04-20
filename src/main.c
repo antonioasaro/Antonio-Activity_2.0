@@ -64,14 +64,16 @@ char *itoa(int i)
 
 	
 #ifdef ACTIVITY
+#define IDLE 128
+#define SCALE 2
 int min(int a, int b) { if (a<b) return(a); else return(b); }
 int calc_height(int total){
 int i, j, h = 0;
   for (i=0, j=1; i<=32; i=i+1) {
-	  if (total <= j) { h = i; break; }
+	  if ((total - IDLE) <= j) { h = i; break; }
     j = j * 2;
   }
-  return(min(2*h, 40));
+  return(min(SCALE * h, 40));
 }
 void handle_graph_update(Layer *layer, GContext *ctx) {
   graphics_context_set_fill_color(ctx, GColorWhite);
@@ -86,7 +88,7 @@ void handle_graph_update(Layer *layer, GContext *ctx) {
 	}
 
 	y = calc_height(totals[x]); 
-    if (x < 8) APP_LOG(APP_LOG_LEVEL_INFO, "UPDATE_GRAPH: %d - (%d, %d)", totals[x], x, y);
+    if (x > (140/2 - 8)) APP_LOG(APP_LOG_LEVEL_INFO, "UPDATE_GRAPH: %d - (%d, %d)", totals[x], x, y);
 	p0 = GPoint(2*x+0, 40); p1 = GPoint(2*x+0, 40 - y); graphics_draw_line(ctx, p0, p1); 
 	p0 = GPoint(2*x+1, 40); p1 = GPoint(2*x+1, 40 - y); graphics_draw_line(ctx, p0, p1); 
   }
